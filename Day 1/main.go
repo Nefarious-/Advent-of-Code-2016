@@ -26,12 +26,13 @@ func findDouble(locs [][]float64) []float64 {
 	return nil
 }
 
-func fmtVector(v []float64, strip_neg bool) {
+func fmtVector(v []float64, stripNeg bool) {
 	for x := range v {
-		if strip_neg {
-			v[x], _ = strconv.ParseFloat(strings.TrimPrefix(fmt.Sprintf("%.0f", v[x]), "-"), 64)
+		n := fmt.Sprintf("%.0f", v[x])
+		if stripNeg {
+			v[x], _ = strconv.ParseFloat(strings.TrimPrefix(n, "-"), 64)
 		} else {
-			v[x], _ = strconv.ParseFloat(fmt.Sprintf("%.0f", v[x]), 64)
+			v[x], _ = strconv.ParseFloat(n, 64)
 		}
 	}
 }
@@ -40,7 +41,7 @@ func main() {
 	args := os.Args[1:]
 	angle := math.Pi / 2
 	pos := make([]float64, 2)
-	prev_locs := make([][]float64, 0)
+	var prevLocs [][]float64
 	for x := range args {
 		dir, num := parse(strings.Trim(args[x], ","))
 		switch dir {
@@ -52,21 +53,21 @@ func main() {
 		for y := 0; float64(y) < num; y++ {
 			t := []float64{pos[0] + math.Cos(angle), pos[1] + math.Sin(angle)}
 			fmtVector(t, false)
-			prev_locs = append(prev_locs, t)
+			prevLocs = append(prevLocs, t)
 			pos = t
 		}
 	}
-	fmt.Printf("Part 1: %.0f; Part 2: %.0f.", part1(prev_locs), part2(prev_locs))
+	fmt.Printf("Part 1: %.0f; Part 2: %.0f.", part1(prevLocs), part2(prevLocs))
 }
 
 func part1(v [][]float64) float64 {
-	final_pos := v[len(v)-1]
-	fmtVector(final_pos, true)
-	return final_pos[0] + final_pos[1]
+	pos := v[len(v)-1]
+	fmtVector(pos, true)
+	return pos[0] + pos[1]
 }
 
 func part2(v [][]float64) float64 {
-	vec_ans := findDouble(v)
-	fmtVector(vec_ans, true)
-	return vec_ans[0] + vec_ans[1]
+	vec := findDouble(v)
+	fmtVector(vec, true)
+	return vec[0] + vec[1]
 }

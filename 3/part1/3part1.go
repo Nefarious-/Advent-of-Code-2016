@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func parseArgs() int {
+func main() {
 	var counter int
 	args, err := ioutil.ReadFile("input.txt")
 	if err != nil {
@@ -22,9 +22,5 @@ func parseArgs() int {
 			counter++
 		}
 	}
-	return counter
-}
-
-func main() {
-	fmt.Println(parseArgs())
+	fmt.Println(counter)
 }

@@ -15,19 +15,6 @@ func parse(input string) (string, float64) {
 	return dir, num
 }
 
-func fmtVecString(input string) [][]float64 {
-	vec := strings.Split(input, " ")
-	output := make([][]float64, 0)
-	for i := 0; i < len(vec)-1; i++ {
-		x_pos := strings.Index(vec[i], "X")
-		y_pos := strings.Index(vec[i], "Y")
-		x, _ := strconv.ParseFloat(vec[i][x_pos+1:y_pos], 64)
-		y, _ := strconv.ParseFloat(vec[i][y_pos+1:], 64)
-		output = append(output, []float64{x, y})
-	}
-	return output
-}
-
 func findDouble(locs [][]float64) []float64 {
 	for i := 0; i < len(locs); i++ {
 		for j := i + 1; j < len(locs); j++ {
@@ -51,9 +38,9 @@ func fmtVector(v []float64, strip_neg bool) {
 
 func main() {
 	args := os.Args[1:]
-	pos := make([]float64, 2)
 	angle := math.Pi / 2
-	var prev_locs string
+	pos := make([]float64, 2)
+	prev_locs := make([][]float64, 0)
 	for x := range args {
 		dir, num := parse(strings.Trim(args[x], ","))
 		switch dir {
@@ -63,14 +50,13 @@ func main() {
 			angle += math.Pi / 2
 		}
 		for y := 0; float64(y) < num; y++ {
-			pos[0] += math.Cos(angle)
-			pos[1] += math.Sin(angle)
-			fmtVector(pos, false)
-			prev_locs += fmt.Sprintf("X%.0fY%.0f ", pos[0], pos[1])
+			t := []float64{pos[0] + math.Cos(angle), pos[1] + math.Sin(angle)}
+			fmtVector(t, false)
+			prev_locs = append(prev_locs, t)
+			pos = t
 		}
 	}
-	vec_fmt := fmtVecString(prev_locs)
-	fmt.Printf("Part 1: %.0f; Part 2: %.0f.", part1(vec_fmt), part2(vec_fmt))
+	fmt.Printf("Part 1: %.0f; Part 2: %.0f.", part1(prev_locs), part2(prev_locs))
 }
 
 func part1(v [][]float64) float64 {

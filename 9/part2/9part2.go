@@ -7,8 +7,7 @@ import (
 	"strings"
 )
 
-func analyse(s string) int {
-	var l int
+func analyse(s string) (length int) {
 	for n := 0; n < len(s); n++ {
 		if s[n] == '(' {
 			pos := strings.Index(s[n:], ")") + n
@@ -16,13 +15,12 @@ func analyse(s string) int {
 			cmd := strings.Split(sl, "x")
 			i, _ := strconv.Atoi(cmd[0])
 			j, _ := strconv.Atoi(cmd[1])
-			l += j * analyse(s[pos+1:pos+1+i])
+			length += j*analyse(s[pos+1:pos+1+i]) - 1
 			n = pos + i
-		} else {
-			l++
 		}
+		length++
 	}
-	return l
+	return
 }
 
 func main() {

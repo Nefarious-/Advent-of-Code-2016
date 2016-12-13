@@ -13,9 +13,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	i := strings.Replace(string(input), " ", "", -1)
-	i = strings.Replace(i, "\n", "", -1)
-	i = strings.Replace(i, "\r", "", -1)
+	r := strings.NewReplacer(" ", "", "\n", "", "\r", "")
+	i := r.Replace(string(input))
 	for n := 0; n < len(i); n++ {
 		if i[n] == '(' {
 			pos := strings.Index(i[n:], ")") + n
@@ -31,8 +30,7 @@ func main() {
 			b.WriteString(s)
 			b.WriteString(i[end:])
 			i = b.String()
-			ch := pos - n
-			n = pos - ch + p*x - 1
+			n += p*x - 1
 		}
 	}
 	fmt.Println(len(i))

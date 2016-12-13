@@ -7,7 +7,8 @@ import (
 	"strings"
 )
 
-func analyse(s string, l *int) {
+func analyse(s string) int {
+	var l int
 	for n := 0; n < len(s); n++ {
 		if s[n] == '(' {
 			pos := strings.Index(s[n:], ")") + n
@@ -15,13 +16,13 @@ func analyse(s string, l *int) {
 			cmd := strings.Split(sl, "x")
 			i, _ := strconv.Atoi(cmd[0])
 			j, _ := strconv.Atoi(cmd[1])
-			pos++
-			analyse(strings.Repeat(s[pos:pos+i], j), l)
-			n = pos + i - 1
+			l += j * analyse(s[pos+1:pos+1+i])
+			n = pos + i
 		} else {
-			(*l)++
+			l++
 		}
 	}
+	return l
 }
 
 func main() {
@@ -31,7 +32,5 @@ func main() {
 	}
 	r := strings.NewReplacer(" ", "", "\n", "", "\r", "")
 	s := r.Replace(string(input))
-	count := new(int)
-	analyse(s, count)
-	fmt.Println(*count)
+	fmt.Println(analyse(s))
 }

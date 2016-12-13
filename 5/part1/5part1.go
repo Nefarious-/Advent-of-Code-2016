@@ -20,8 +20,7 @@ func main() {
 	var pass []byte
 	var counter int
 	for i := 0; counter < 8; i++ {
-		ok, res := testHash(fmt.Sprintf("%s%d", input, i))
-		if ok {
+		if ok, res := testHash(fmt.Sprintf("%s%d", input, i)); ok {
 			pass = append(pass, res)
 			counter++
 		}

@@ -25,12 +25,13 @@ func main() {
 	pass := make([]byte, 8)
 	var counter int
 	for i := 0; counter < 8; i++ {
-		ok, v, pos := testHash(fmt.Sprintf("%s%d", input, i))
-		if ok && pos < 8 && pos >= 0 {
-			if pass[pos] == 0 {
-				pass[pos] = v
-				counter++
-				fmt.Println(string(pass))
+		if ok, v, pos := testHash(fmt.Sprintf("%s%d", input, i)); ok {
+			if pos < 8 && pos >= 0 {
+				if pass[pos] == 0 {
+					pass[pos] = v
+					counter++
+					fmt.Println(string(pass))
+				}
 			}
 		}
 	}

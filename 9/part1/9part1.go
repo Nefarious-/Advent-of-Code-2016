@@ -15,6 +15,7 @@ func main() {
 	}
 	r := strings.NewReplacer(" ", "", "\n", "", "\r", "")
 	i := r.Replace(string(input))
+	var b bytes.Buffer
 	for n := 0; n < len(i); n++ {
 		if i[n] == '(' {
 			pos := strings.Index(i[n:], ")") + n
@@ -25,12 +26,12 @@ func main() {
 			pos += 1
 			end := pos + p
 			s := strings.Repeat(i[pos:end], x)
-			var b bytes.Buffer
 			b.WriteString(i[:n])
 			b.WriteString(s)
 			b.WriteString(i[end:])
 			i = b.String()
 			n += p*x - 1
+			b.Reset()
 		}
 	}
 	fmt.Println(len(i))

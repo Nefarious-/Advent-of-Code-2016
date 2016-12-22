@@ -4,23 +4,23 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
+	"hash"
 	"os"
-	"strings"
 )
 
-func testHash(s string) (bool, byte) {
-	h := md5.New()
-	h.Write([]byte(s))
-	res := hex.EncodeToString(h.Sum(nil))
-	return strings.HasPrefix(res, "00000"), res[5]
+func testHash(s string, h *hash.Hash) (bool, byte) {
+	(*h).Write([]byte(s))
+	res := hex.EncodeToString((*h).Sum(nil))
+	(*h).Reset()
+	return res[:5] == "00000", res[5]
 }
 
 func main() {
 	input := os.Args[1]
 	var pass []byte
-	var counter int
-	for i := 0; counter < 8; i++ {
-		if ok, res := testHash(fmt.Sprintf("%s%d", input, i)); ok {
+	h := md5.New()
+	for i, counter := 0, 0; counter < 8; i++ {
+		if ok, res := testHash(fmt.Sprintf("%s%d", input, i), &h); ok {
 			pass = append(pass, res)
 			counter++
 		}
